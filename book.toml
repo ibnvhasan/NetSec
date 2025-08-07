@@ -1,0 +1,9 @@
+[book]
+title = "Network Security Notes"
+authors = ["ibnvhasan"]
+description = "FIT5037 - Network Security Notes"
+language = "en"
+src = "docs"
+
+[output.html]
+git-repository-url = "https://github.com/ibnvhasan/NetSec"
