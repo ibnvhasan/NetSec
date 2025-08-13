@@ -1,2 +1,2 @@
 # NetSec
-FIT5037 Notes
+[FIT5037 Notes](https://ibnvhasan.github.io/NetSec/book)
