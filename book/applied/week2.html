@@ -196,6 +196,7 @@ cd
 mkdir pki
 cd pki
 mkdir demoCA
+cd demoCA
 mkdir certs
 mkdir crl
 mkdir newcerts
@@ -220,7 +221,9 @@ echo 1000 &gt; serial
 <pre><code class="language-bash">pwd
 </code></pre>
 <p>By default OpenSSL configures itself as an internal CA which is only signing certificates for the same organisation. We need to change this configurations so that our CA can sign certificate for any domain name. Find the following section in the configuration file <code>/usr/lib/ssl/openssl.cnf</code> and change them as below.</p>
-<pre><code class="language-bash"># you can use nano /usr/lib/ssl/openssl.cnf
+<pre><code class="language-bash"># open a console in your RootCA machine
+# you can use: 
+nano /usr/lib/ssl/openssl.cnf
 # then press ctrl + W and write policy_match to find it
 [ policy_match ]
 countryName = optional
@@ -234,7 +237,7 @@ emailAddress = optional
 <pre><code class="language-bash">openssl req -new -x509 -keyout ca.key -out ca.crt
 </code></pre>
 <h3 id="2-creating-a-certificate-for-networksecuritycom"><a class="header" href="#2-creating-a-certificate-for-networksecuritycom">2. Creating a Certificate for <strong>networksecurity.com</strong></a></h3>
-<p>Now, we become a root CA, we are ready to sign digital certificates for our customers. Our first customer is a company called networksecurity.com. We assume that the web server of networksecurity.com is <code>Internal-Web</code> node in Server LAN. Perform the following three steps in <code>Internal-Web</code> node.</p>
+<p>Now, we become a root CA, we are ready to sign digital certificates for our customers. Our first customer is a company called <code>networksecurity.com</code>. We assume that the web server of <code>networksecurity.com</code> is <code>Internal-Web</code> node in Server LAN. Perform the following three steps in <strong><code>Internal-Web</code></strong> node.</p>
 <h4 id="a-generate-publicprivate-key-pair"><a class="header" href="#a-generate-publicprivate-key-pair">a) Generate public/private key pair:</a></h4>
 <p>The company needs to first create its own public/private key pair. We can run the following command to generate an RSA key pair (both private and public keys). The keys will be stored in the file server.pem:</p>
 <pre><code class="language-bash">cd
@@ -242,13 +245,212 @@ apt install openssl
 openssl genrsa -out server.pem 2048
 </code></pre>
 <p>The <code>server.pem</code> is an encoded text file, so you will not be able to see the actual content, such as the modulus, private exponents, etc. To see those, you can run the following command:</p>
-<pre><code>openssl rsa -in server.pem -text
+<pre><code class="language-bash">openssl rsa -in server.pem -text
 </code></pre>
-<h4 id="b-generating-certificates"><a class="header" href="#b-generating-certificates">b) Generating Certificates:</a></h4>
-<p>The CSR file needs to have the CA’s signature to form a certificate. In the real world, the CSR files are usually sent to a trusted CA for their signature. In this lab, we will use our own trusted CA to generate certificates. Copy the content of server.csr from <code>Internal-Web</code> to CA. Execute the following command on CA to turn the certificate signing request <code>server.csr</code> into an X509 certificate server.crt, using the CA’s <code>ca.crt</code> and <code>ca.key</code>:</p>
-<pre><code>openssl ca -in server.csr -out server.crt -cert ca.crt -keyfile ca.key
+<h4 id="b-generate-a-certificate-signing-request-csr"><a class="header" href="#b-generate-a-certificate-signing-request-csr">b) Generate a Certificate Signing Request (CSR):</a></h4>
+<p>Once the company has the key file, it should generate a Certificate Signing Request (CSR), which basically includes the company’s public key. The CSR will be sent to the CA, who will generate a certificate for the key (usually after ensuring that identity information in the CSR matches with the server’s true identity). Please use <code>networksecurity.com</code> as the common name of the certificate request.</p>
+<pre><code class="language-bash">openssl req -new -key server.pem -out server.csr
 </code></pre>
-<p>Copy the certificate file (<code>server.crt</code>) to the <code>Internal-Web</code> server</p>
+<h4 id="c-generating-certificates"><a class="header" href="#c-generating-certificates">c) Generating Certificates:</a></h4>
+<p>The CSR file needs to have the CA’s signature to form a certificate. In the real world, the CSR files are usually sent to a trusted CA for their signature. In this lab, we will use our own trusted CA to generate certificates. Copy the content of server.csr from <code>Internal-Web</code> to CA (refer to <a href="#b1-option-1">Appendix 1</a>). Execute the following command on CA to turn the certificate signing request <code>server.csr</code> into an X509 certificate server.crt, using the CA’s <code>ca.crt</code> and <code>ca.key</code>:</p>
+<pre><code class="language-bash">openssl ca -in server.csr -out server.crt -cert ca.crt -keyfile ca.key
+</code></pre>
+<p>Copy the certificate file (<code>server.crt</code>) to the <code>Internal-Web</code> server (refer to <a href="#b1-option-1">Appendix 1</a> again)</p>
+<h3 id="3-deploying-certificate-in-an-https-web-server-apache"><a class="header" href="#3-deploying-certificate-in-an-https-web-server-apache">3. Deploying Certificate in an HTTPS Web Server (Apache)</a></h3>
+<p>Perform the following on <code>Internal-Web</code> node.</p>
+<ul>
+<li>Install Apache server and a text editor (nano):</li>
+</ul>
+<pre><code class="language-bash">apt update
+apt install apache2
+</code></pre>
+<blockquote>
+<p>If you get a Perl base dependency error when installing Apache2, run the following command to install the specific perl-base version (Optional).
+<code>apt install perl-base=5.38.2-3.2build2</code></p>
+</blockquote>
+<p>An Apache server can simultaneously host multiple websites. It needs to know the directory where a website’s files are stored. This is done via its VirtualHost file, located in the <code>/etc/apache2/sites-available</code> directory. To add an HTTP website, we add a VirtualHost entry to the file <code>000-default.conf</code> (using <code>nano /etc/apache2/sites-available/000-default.conf</code>). Add the following lines at the end of the file:</p>
+<pre><code class="language-bash">nano /etc/apache2/sites-available/000-default.conf
+
+# Then add these following lines:
+# &lt;VirtualHost *:80&gt;
+    #...
+    ServerName networksecurity.com
+    DocumentRoot /var/www/networksecurity
+    DirectoryIndex index.html
+    #...
+# &lt;/VirtualHost&gt;
+</code></pre>
+<p>and to the file <code>nano /etc/apache2/sites-available/default-ssl.conf</code>:</p>
+<pre><code class="language-bash">nano /etc/apache2/sites-available/default-ssl.conf
+
+# Then add these following lines: 
+# &lt;VirtualHost *:443&gt;
+    # ...
+    ServerName networksecurity.com
+    DocumentRoot /var/www/networksecurity
+    DirectoryIndex index.html
+    SSLEngine On
+    SSLCertificateFile /etc/apache2/server.crt
+    SSLCertificateKeyFile /etc/apache2/server.pem
+    # ...
+# &lt;/VirtualHost&gt;
+</code></pre>
+<ul>
+<li>The <code>ServerName</code> entry specifies the name of the website,</li>
+<li>while the <code>DocumentRoot</code> entry specifies where the files for the website are stored. The above example sets up the HTTPS site https://networksecurity.com (port 443 is the default HTTPS port).</li>
+<li>In the setup, we need to tell Apache where the server certificate (<code>/etc/apache2/server.crt</code>) and private key (<code>/etc/apache2/server.pem</code>) are stored.</li>
+</ul>
+<p>First, we will create our <code>DocumentRoot</code> directory and copy our certificate and private key files in apache directory. Then, we will run few commands to test our apache configuration and finally we will restart our apache server:</p>
+<pre><code class="language-bash">mkdir /var/www/networksecurity
+cp server.crt /etc/apache2/server.crt
+cp server.pem /etc/apache2/server.pem
+echo 'ServerName 127.0.0.1'&gt;&gt; /etc/apache2/apache2.conf
+apachectl configtest
+a2enmod ssl
+a2ensite default-ssl
+service apache2 restart
+</code></pre>
+<p>Let us also create one test html file:</p>
+<pre><code class="language-bash">nano /var/www/networksecurity/index.html
+</code></pre>
+<pre><code class="language-html">&lt;!-- Copy the following in html file and press ctrl+x to close and save. --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Network Security&lt;/h1&gt;
+        &lt;p&gt;This is a test page.&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h4 id="4-browsing-networksecuritycom"><a class="header" href="#4-browsing-networksecuritycom">4. Browsing <code>networksecurity.com</code></a></h4>
+<p>We can use one of our clients to visit the newly created HTTPS website. Open on <code>Internal-Client-2</code> which you added in the week 1 and edit the <code>/etc/hosts</code> file. We point the URL <code>neworksecurity.com</code> to our server (If you don’t have <code>Internal-Client-2</code>, add a new node to teh Corp LAN.</p>
+<blockquote>
+<p><strong>Do not use the exiting Internal-Client or Internal-Attacker nodes)</strong></p>
+</blockquote>
+<pre><code class="language-bash">nano /etc/hosts
+
+# And add the following line at the end of file:
+10.10.5.80 networksecurity.com
+
+# Press ctrl+x to save and exit. We will use text-based browser lynx to browse the website:
+
+apt install lynx
+lynx https://networksecurity.com
+</code></pre>
+<blockquote>
+<p><strong>Question</strong>: Why <code>lynx</code> is complaining about the certificate? Press <code>y</code> to accept the risk. You should see your webpage (index.html).</p>
+</blockquote>
+<blockquote>
+<p><strong>Answer</strong>: Because Internal-Client-2 default OS hasn't listed the domain <code>networksecurity.com</code> in their trusted list. We must put the certificate manually. However, instead of putting server's certificate, we can put the RootCA's certificate, so every certificate signed by <code>RootCA</code> will be trusted by <code>Internal-Client-2</code>. Much more efficient than manually add every service's certificate onwards.</p>
+</blockquote>
+<blockquote>
+<p>Had our certificate been assigned by a public CA such as GlobalSign or Sectigo, we will not have such an error message, because Public CA certificate is very likely pre-loaded into lynx’s certificate repository already. Unfortunately, the certificate of networksecurity.com is signed by our own CA (i.e., using ca.crt), and this CA is not recognized by lynx.</p>
+</blockquote>
+<p>We can include our CA certificate in lynx. In CA server, copy the content of ca.crt:</p>
+<pre><code class="language-bash">cat ca.crt
+
+# Select the contents and copy it. In `Internal-Client-2`, open ca-certificates file:
+apt install ca-certificates
+nano /etc/ssl/certs/ca-certificates.crt
+</code></pre>
+<p>Paste contents of certificate, which you copied from server, at the top of <code>ca-certificates.crt</code> file. Now again <code>lynx</code> to <code>networksecurity.com</code>, and this time it should not complain about the certificate.</p>
+<pre><code class="language-bash">lynx https://networksecurity.com
+</code></pre>
+<hr />
+<h2 id="acknowledgements"><a class="header" href="#acknowledgements">Acknowledgements</a></h2>
+<p>Parts of this lab is based on the SEED project (Developing Instructional Laboratory for Computer Security Education)</p>
+<blockquote>
+<p>Read more: <a href="https://seedsecuritylabs.org">SeedSecurityLabs</a></p>
+</blockquote>
+<h3 id="a-appendix-ip-configuration"><a class="header" href="#a-appendix-ip-configuration">A Appendix: IP Configuration</a></h3>
+<h4 id="ip-configuration-for-internal-web-server"><a class="header" href="#ip-configuration-for-internal-web-server">IP configuration for Internal-Web Server</a></h4>
+<pre><code class="language-bash">#
+# This is a sample network config, please uncomment lines to configure the network
+#
+
+# Uncomment this line to load custom interface files
+# source /etc/network/interfaces.d/*
+
+# Static config for eth0
+auto eth0
+iface eth0 inet static
+	address 10.10.5.80
+	netmask 255.255.255.0
+	gateway 10.10.5.1
+	up echo nameserver 8.8.8.8 &gt; /etc/resolv.conf
+
+# DHCP config for eth0
+#auto eth0
+#iface eth0 inet dhcp
+hostname Internal-Web
+</code></pre>
+<h4 id="ip-configuration-for-ca-server"><a class="header" href="#ip-configuration-for-ca-server">IP configuration for CA Server</a></h4>
+<pre><code class="language-bash">#
+# This is a sample network config, please uncomment lines to configure the network
+#
+
+# Uncomment this line to load custom interface files
+# source /etc/network/interfaces.d/*
+
+# Static config for eth0
+auto eth0
+iface eth0 inet static
+	address 10.10.5.100
+	netmask 255.255.255.0
+	gateway 10.10.5.1
+	up echo nameserver 8.8.8.8 &gt; /etc/resolv.conf
+
+# DHCP config for eth0
+#auto eth0
+#iface eth0 inet dhcp
+hostname CA
+</code></pre>
+<h3 id="b-copying-files-between-nodes"><a class="header" href="#b-copying-files-between-nodes">B Copying files between nodes</a></h3>
+<h4 id="b1-option-1"><a class="header" href="#b1-option-1">B.1 Option 1</a></h4>
+<p>The files used in this lab (certificate files, key files and CSR files) are base-64 encoded. They can be opened using the text editor nano or cat command. To copy files, follow the below steps.</p>
+<pre><code class="language-bash"># 1. Open the file using nano on the source node.
+nano server.crt
+
+# 2. Select the content using your mouse &gt; right-click &gt; Copy.
+
+# 3. Create a new file on the destination node using nano editor with the same name.
+
+# 4. Open the file using nano on the source node.
+nano server.crt
+
+# 5. Right-click &gt; Paste the content.
+
+# 6. Press Control + X to save the content as the new file.
+</code></pre>
+<h4 id="b2-option-2"><a class="header" href="#b2-option-2">B.2 Option 2</a></h4>
+<p>To copy files using SCP follow the below steps.</p>
+<pre><code class="language-bash"># 1. Start SSH service on the Internal-Web server.
+nano /etc/ssh/sshd_config
+# edit these following lines
+    PermitRootLogin yes
+    PasswordAuthentication yes
+
+# 2. Add the following lines to the SSH configuration file on the Internal-Web server.
+service ssh restart
+
+# 3. Set a password for the root user on Internal-Web server. You can provide a simple password here.
+passwd
+
+# 4. Copy the file from the CA server to the /etc/apache directory in the Internal-Web server.
+scp server.crt root@10.10.5.80:/etc/apache2
+</code></pre>
+<h4 id="b3-option-3"><a class="header" href="#b3-option-3">B.3 Option 3</a></h4>
+<p>To copy files using Netcat.</p>
+<pre><code class="language-bash"># 1. install Netcat on both CA and Internal-Server.
+apt update
+apt install netcat-openbsd
+
+# 2. Run the below command on the Internal-Web server to listen to the file sent from CA.
+nc -l -p 9000 &gt; server.crt
+
+# 3. Run the below command on the CA server to send the file to the listening port 9000 of Internal-Web server.
+nc 10.10.5.80 9000 &lt; ca.crt
+</code></pre>
 
                     </main>
 
