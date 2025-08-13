@@ -1,0 +1,414 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Week 3 - Network Security Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="FIT5037 - Network Security Notes">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Network Security Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/ibnvhasan/NetSec" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="week-3-applied-class-material"><a class="header" href="#week-3-applied-class-material">Week 3 Applied Class Material</a></h1>
+<blockquote>
+<p>The exercises are designed for students to finish in an individual capacity. The exercises are not designed to be completed in tutorial sessions but rather to give you some tasks and a starting point to continue and complete on your own.</p>
+</blockquote>
+<hr />
+<h2 id="1-tcp-attacks"><a class="header" href="#1-tcp-attacks">1. TCP Attacks</a></h2>
+<p>In this task we will perform two types of transport layer attacks; <strong>TCP SYN Flood attack</strong> and <strong>TCP Reset attack</strong>. Before we begin, configure your SecureCorp topology as below. You will need <code>Internal-Client-2</code>, <code>Internal-Attacker-2</code> and <code>Internal-Server</code> nodes. <code>Internal-Attacker-2</code> is a new node you need to add to the corp LAN. If you don’t have the other nodes in your network, you will need to add them as well. To make it easy, we have configured all nodes with static IPs.</p>
+<p align="center">
+    <img src="../assets/a3-fig-1.png" alt="Network Topology" />
+</p>
+<p align="center">
+    Fig1. Network Topology
+</p>
+<blockquote>
+<p>Note: When you add a new node, make sure to configure the below directories as persistent.</p>
+</blockquote>
+<pre><code>/home
+/var
+/opt
+/root
+/etc
+/usr
+</code></pre>
+<ul>
+<li>Open SecureCorp network configuration in GNS3 and start all nodes. Run the below 3 commands on <code>Internal-Server</code> node:</li>
+</ul>
+<pre><code class="language-bash">apt update ; apt install net-tools -y
+apt install perl-base=5.38.2-3.2build2 -y ; apt install apache2 -y
+service apache2 start
+</code></pre>
+<ul>
+<li>Run the below commands on <code>Internal-Attacker-2</code> node:</li>
+</ul>
+<pre><code class="language-bash">apt update ; apt install python3-scapy -y
+</code></pre>
+<ul>
+<li>Run the below commands on <code>Internal-Client-2</code> node:</li>
+</ul>
+<pre><code class="language-bash">apt update; apt install lynx
+</code></pre>
+<h3 id="syn-flood-attacks"><a class="header" href="#syn-flood-attacks">SYN Flood Attacks</a></h3>
+<p>SYN flood is a form of DoS attack in which attackers send many SYN requests to a victim’s TCP port, but the attackers have no intention to finish the 3-way handshake procedure. Attackers either use spoofed IP address or do not continue the procedure. Through this attack, attackers can flood the victim’s queue that is used for half-opened connections, i.e. the connections that has finished SYN, SYN-ACK, but has not yet got a final ACK back. When this queue is full, the victim cannot take any more connection.</p>
+<p align="center">
+    <img src="../assets/a3-fig-2.png" alt="SYN-ACK"/>
+</p>
+<p align="center">
+    Fig2. SYN-ACK
+</p>
+<p>The size of the queue has a system-wide setting. In Linux, we can check the system queue size setting using the following command (you can try this command in <code>Internal-Server</code>):</p>
+<pre><code class="language-bash">sysctl -q net.ipv4.tcp_max_syn_backlog
+</code></pre>
+<p>We can use command <code>netstat -antup</code> to check the usage of the queue, i.e., the number of half opened connection associated with a listening port. The state for such connections is <code>SYN-RECV</code>. If the 3-way handshake is finished, the state of the connections will be <strong>ESTABLISHED</strong>. We will use <code>syn.py</code> (available on Moodle) to attack <code>Internal-Server</code> with <code>SYN FLOOD</code>. First, run the following on the <code>Internal-Server</code> terminal:</p>
+<pre><code class="language-bash">netstat -antup
+</code></pre>
+<p>Run the following command on <code>Internal-Attacker-2</code> terminal for SYN flooding (Replace the IP with your Internal-Server’s IP address):</p>
+<pre><code class="language-bash">python3 syn.py --ip 10.10.10.80 --port 80
+</code></pre>
+<p>Try telnet from <code>Internal-Client-2</code> to <code>Internal-Server</code>, is it successful (Replace the IP with your <code>Internal-Server</code>’s IP addresss)?</p>
+<pre><code class="language-bash">telnet 10.10.10.80 80
+</code></pre>
+<p>The Linux kernel has a built-in <code>SYN</code> cookies option which protects the system from <code>SYN</code> flooding attack. You need to first disable <code>SYN</code> cookie. You can use the sysctl command to turn on/off the <code>SYN</code> cookie mechanism. To display the <code>SYN</code> cookie flag:</p>
+<pre><code class="language-bash">sysctl -a | grep cookie
+</code></pre>
+<p>To turn off SYN cookie:</p>
+<pre><code class="language-bash">sysctl -w net.ipv4.tcp_syncookies=0
+</code></pre>
+<p>To turn on SYN cookie:</p>
+<pre><code class="language-bash">sysctl -w net.ipv4.tcp_syncookies=1
+</code></pre>
+<p>Try attacks with countermeasure with <code>ON</code> and <code>OFF</code> and try connecting telnet to server. You should be able to telnet (while attacker is <code>SYN</code> flooding) to the srever from client when the <code>syncookie=1</code>.</p>
+<blockquote>
+<p>Then, you can try to analyse packets in <strong>Wireshark</strong>. Be careful with <strong>wireshark</strong>.</p>
+</blockquote>
+<h3 id="tcp-rst-attacks"><a class="header" href="#tcp-rst-attacks">TCP RST Attacks</a></h3>
+<p>The objective of this task is to launch a TCP RST attack to break an existing <code>telnet</code> connection between <code>Internal-Client-2</code> and <code>Internal-Server</code>. Start Wireshark on the link between <code>Internal-Server</code> and <code>Corp-Switch</code>. Connect <code>telnet</code> from <code>Internal-Client-2</code> to <code>Internal-Server</code>. Execute the following on <code>Internal-Client-2</code> (Replace the IP with your <code>Internal-Server</code>’s IP address).</p>
+<pre><code class="language-bash">telnet 10.10.10.80 80
+</code></pre>
+<p>In Wireshark, click on the last packet sent to Internal-Server, now right click on “<strong>Transmission Control Protocol</strong>” and uncheck the “Relative Sequence Numbers”:</p>
+<p align="center">
+    <img src="../assets/a3-fig-3.png" alt="Disabling Relative Sequence Numbers"/>
+</p>
+<p align="center">
+    Fig3. Disabling Relative Sequence Numbers
+</p>
+<p>Note the “<strong>Next Sequence number</strong>” in the “<strong>Transmission Control Protocol</strong>” panel (it can be seen in above screenshot). Attacker will use this sequence number for sending the next packet.</p>
+<p>We will use <code>scapy</code>, a python-based packet generator, for spoofing the packets. The following code will send a <code>RST</code> packet, run this from <code>Internal-Attacker-2</code>’s terminal. (You need to enter values of ”CLIENT’s IP”, ”SERVER’s IP”, ”sport”, and sequence number, these values can be obtained from Wireshark).</p>
+<p>Here the assumption is that the attacker has traffic sniffing access to <code>Corp-Switch</code>, or attacker is able to perform ARP poisoning attack and capture the TCP packets. Use the below code to create <code>reset.py</code>.</p>
+<pre><code class="language-py">!/usr/bin/python3
+import sys
+from scapy.all import *
+print("sending reset packet...")
+
+IPLayer = IP (src="CLIENT’s IP", dst = "SERVER’s IP")
+TCPLayer = TCP (sport=37766, dport=80, flags="R", seq=506005543)
+
+pkt=IPLayer/TCPLayer
+
+ls(pkt)
+
+send(pkt,verbose=0)
+</code></pre>
+<p align="center">
+    <img src="../assets/a3-fig-4.png" style="height: 20em" alt="Running reset.py on Internal-Attacker-2 terminal"/>
+</p>
+<p align="center">
+    Fig4. Running reset.py on Internal-Attacker-2 terminal
+</p>
+<p>If successful, it will reset the connection between the <code>Internal-Client-2</code> and <code>Internal-Server</code>.</p>
+<p align="center">
+    <img src="../assets/a3-fig-5.png" alt="Internal-Client-2 lost the connection"/>
+</p>
+<p align="center">
+    Fig5. Internal-Client-2 lost the connection
+</p>
+<hr />
+<h2 id="2-transport-layer-security"><a class="header" href="#2-transport-layer-security">2 Transport Layer Security</a></h2>
+<p>The latest version of the Transport Layer Security (TLS) protocol is TLS 1.3, standardised in August 2018 under RFC 8446. Both TLS 1.2 and TLS 1.3 are currently considered secure for general communications when configured with strong cipher suites. While TLS 1.3 offers improved performance, stronger default security, and reduced handshake complexity, TLS 1.2 remains the most widely deployed version on the internet today due to its broad compatibility with existing systems.</p>
+<p>In this lab, we will use OpenSSL to carry out all tasks. OpenSSL is an open-source software library that provides the tools and libraries needed to implement SSL (Secure Sockets Layer) and TLS (Transport Layer Security) protocols. It also includes a command-line utility (openssl) for testing TLS connections, managing certificates, and performing various cryptographic operations.</p>
+<hr />
+<h3 id="21-tls-v12"><a class="header" href="#21-tls-v12">2.1 TLS v1.2</a></h3>
+<p>A TLS handshake occurs whenever a user accesses a website over HTTPS. This process involves multiple steps in which the client and server exchange the information needed to complete the handshake and establish secure communication. In this task, we will capture a TLS 1.2 handshake using Wireshark and analyze the details of the connection establishment.</p>
+<p>Open SecureCorp network configuration in GNS3 and start all nodes. You can use one of the nodes you added in the previous labs to perform the lab tasks. (ex: Internal-Server, CA, Internal-Client-2)</p>
+<h4 id="initiate-a-tls-12-handshake-with-openssl"><a class="header" href="#initiate-a-tls-12-handshake-with-openssl">Initiate a TLS 1.2 Handshake with OpenSSL</a></h4>
+<p>Start packet capture on the link between the node you are using to run the commands and the network Switch it is connected to. Then run the below command on your chosen node to initiate a TLS handshake with Monash web server over TLS 1.2:</p>
+<pre><code class="language-bash">openssl s_client -connect monash.edu:443 -tls1_2
+</code></pre>
+<p>Wireshark should have captured the TLS 1.2 handshake traffic. You should see the final packet of TLS handshake in Wireshark which is the ChangeCipherSpec message. Now that the TLS handshake is established, request the webpage over TLS from Monash webserver using the below command.</p>
+<blockquote>
+<p><strong>Note</strong>: You must run the command below within 10 seconds of establishing the handshake; otherwise, the handshake will expire. If it does expire, run the previous command again to re-establish it.</p>
+</blockquote>
+<pre><code class="language-bash">GET / HTTP/1.1
+Host: monash.edu
+</code></pre>
+<p>After running the above command, you should see Application Data packets being transmitted over TLS in Wireshark.</p>
+<hr />
+<h4 id="client-hello"><a class="header" href="#client-hello">Client Hello</a></h4>
+<p>Open Wireshark and find ”Client Hello” packet. TLS wraps all traffic in “records” of different types. We see that the first byte out of our browser is the hex byte <code>0x16 = 22</code> which means that this is a “handshake” record:</p>
+<p align="center">
+    <img src="../assets/a3-fig-6.png" alt="Client Hello"/>
+</p>
+<p align="center">
+    Fig6. Client Hello
+</p>
+<p>The next two bytes are <code>0x0303</code> which indicate that this is a version 3.3 record which shows that TLS 1.2 is essentially SSL 3.3. The handshake record is broken out into several messages. The first is our “Client Hello” message (<code>0x01</code>). There are a few important things here:</p>
+<h5 id="1-random"><a class="header" href="#1-random">1. Random</a></h5>
+<p>There are four bytes representing the current Coordinated Universal Time (UTC) in the Unix epoch format, which is the number of seconds since January 1, 1970. In this case, <code>0x70153b7e</code>.
+It’s followed by 28 random bytes. This will be used later on.</p>
+<p align="center">
+    <img src="../assets/a3-fig-7.png" alt="Random"/>
+</p>
+<p align="center">
+    Fig7. Random
+</p>
+<h5 id="2-cipher-suites"><a class="header" href="#2-cipher-suites">2. Cipher Suites</a></h5>
+<p>This is a list of all of the encryption algorithms that the browser is willing to support. Its top pick is a very strong choice of <code>TLS AES 256 GCM SHA384</code> followed by 28 others that it’s willing to accept.</p>
+<p align="center">
+    <img src="../assets/a3-fig-8.png" alt="Cipher Suites"/>
+</p>
+<p align="center">
+    Fig8. Cipher Suites
+</p>
+<h5 id="3-server-name-extension"><a class="header" href="#3-server-name-extension">3. server name extension</a></h5>
+<p>This is a way to tell monash.edu that our browser is trying to reach <a href="https://www.monash.edu">https://www.monash.edu</a>. This is really convenient because our TLS handshake occurs long before any HTTP traffic. HTTP has a “Host” header which allows hosting companies to host hundreds of websites onto a single IP address. SSL has traditionally required a different IP for each site, but this extension allows the server to respond with the appropriate certificate that the browser is looking for.</p>
+<p align="center">
+    <img src="../assets/a3-fig-9.png" alt="server name extension"/>
+</p>
+<p align="center">
+    Fig9. server name extension
+</p>
+<h5 id="4-session-id"><a class="header" href="#4-session-id">4. Session ID</a></h5>
+<p>Here it’s <code>empty/null</code>. If we had previously connected to Monash a few seconds ago, we could potentially resume a session and avoid a full handshake.</p>
+<p align="center">
+    <img src="../assets/a3-fig-10.png" alt="session id"/>
+</p>
+<p align="center">
+    Fig10. Session ID
+</p>
+<hr />
+<h4 id="server-hello"><a class="header" href="#server-hello">Server Hello</a></h4>
+<p>Monash replies with a handshake record. The record has version bytes of <code>0x0303</code> meaning that Monash agreed to our request to use TLS 1.2. This record has three sub-messages with some interesting data:</p>
+<h5 id="1-server-hello-message-2"><a class="header" href="#1-server-hello-message-2">1. Server Hello Message (2)</a></h5>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../applied/week2.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../workshops/workshop1.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../applied/week2.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../workshops/workshop1.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
