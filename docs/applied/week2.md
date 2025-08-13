@@ -31,6 +31,16 @@ mkdir crl
 mkdir newcerts
 touch index.txt
 echo 1000 > serial
+
+
+# The correct directory structure is:
+# `-- pki
+#     |-- demoCA
+#     |   |-- certs
+#     |   |-- crl
+#     |   |-- index.txt
+#     |   |-- newcerts
+#     |   |-- serial
 ```
 - [x] **`demoCA`** is Where everything is kept
 - [x] **`certs`** is Where the issued certs are kept
