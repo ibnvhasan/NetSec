@@ -1,1 +1,8 @@
 # GNS3 Tips
+
+1. Please note that NOT all folders in the provided GNS3 Docker containers are persistent. Any files saved outside the persistent folders will be deleted when GNS3 is closed. You can view the list of persistent folders by right-clicking on the node and navigating to "Configure->Advanced" section. We recommend always working within your home directory (/home).
+2. All changes made to GNS3 networks are saved automatically and cannot be undone. The most reliable way to preserve a working version of your project is to take a snapshot of the entire virtual machine. This will be useful when working on your assignments.
+3. When starting a project in GNS3, it may take some time for all nodes to finish loading. Monitor the CPU usagein the right bottom pane of GNS3 window, and wait until the usage drops below 90% and all nodes turn green.
+4. If you want to restart a single node, instead of restarting the entire project, right click on that particular node and stop it, wait for it to turn red, and then start again.
+5. When you start a project for the first time, the Docker containers configured with DHCP may not get an IP. The reason for this is that the firewall which acts as the DHCP server takes more time to start than the Docker containers. To fix this, after the project finish loading, manually stop and start the Docker containers with DHCP configurations.
+6. You can add multiple copies of the same project. Use the same command to download a new copy of the project.
