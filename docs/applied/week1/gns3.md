@@ -10,7 +10,7 @@ Connect to the Shell of the VM via your host operating system’s Terminal. Plea
 gdown 1hhDuc2S7MMdz2KO6tfr85PSx7W4t87Pp ; sudo bash ./install_SecureCorp.sh
 ```
 <p align="center">
-    <img src="../../assets/a1-fig-1.png" alt="Download SecureCorp project from VM Shell" />
+    <img src="../../assets/a1/a1-fig-1.png" alt="Download SecureCorp project from VM Shell" />
 </p>
 <p align="center">
     Fig1. Download SecureCorp project from VM Shell
@@ -31,7 +31,7 @@ Using GNS3 we can emulate real hardware devices. All the devices in SecureCorp n
 The workstations/servers in the project are Ubuntu docker containers and the routers are Mikrotik routers running RouterOS and switches are generic switches.
 
 <p align="center">
-    <img src="../../assets/a1-fig-2.png" alt="SecureCorp network topology" />
+    <img src="../../assets/a1/a1-fig-2.png" alt="SecureCorp network topology" />
 </p>
 <p align="center">
     Fig2. SecureCorp network topology

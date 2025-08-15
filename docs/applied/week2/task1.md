@@ -2,14 +2,32 @@
 
 Open SecureCorp network configuration in GNS3 and start all nodes. We will add 2 new Ubuntu-24.04-plus-essentials nodes (Internal-Web and CA) to the Server LAN with static IPs to perform this lab. You can find the static IP configurations in the Appendix section at the end of this document. Before starting the configurations, make the /etc and /usr directories persistent on both Internal-Web and CA nodes by right-clicking the node > Configure > Advanced. Stop and start both nodes after the configurations.
 
+<p align="center">
+    <img src="../../assets/a2/a2-fig-1.png" alt="Add CA and Internal-Web nodes with static IPs" style="max-width: 70%; height: auto;"/>
+</p>
+<p align="center">
+    Fig1. Add `CA` and `Internal-Web` nodes with static IPs
+</p>
+
+> **NOTE**: When you add a new node, make sure to configure the below directories as persistent.
+>
+```
+/home
+/var
+/opt
+/root
+/etc
+/usr
+```
+
 
 ---
 
 ### 1. Becoming a Certificate Authority (CA)
 
-A **Certificate Authority (CA)** is a trusted entity that issues digital certificates. The digital certificate certifies the ownership of a public key by the named subject of the certificate. A number of commercial CAs are treated as root CAs; This is a list of the leading public SSL certificate authorities by market share. Users who want to get digital certificates issued by the commercial CAs need to pay those CAs. In this lab, we need to create digital certificates, but we are not going to pay any commercial CA. We will become a root CA ourselves, and then use this CA to issue certificate for others (e.g. servers). In this task, we will make ourselves a root CA, and generate a certificate for this CA. Unlike other certificates, which are usually signed by another CA, the root CA’s certificates are self-signed. Root CA’s certificates are usually pre-loaded into most operating systems, web browsers, and other software that rely on PKI. Root CA’s certificates are unconditionally trusted.
+A **Certificate Authority (CA)** is a trusted entity that issues digital certificates. The digital certificate certifies the ownership of a public key by the named subject of the certificate. A number of commercial CAs are treated as root CAs; This is a list of the leading public SSL certificate authorities by market share. Users who want to get digital certificates issued by the commercial CAs need to pay those CAs. In this lab, we need to create digital certificates, but we are not going to pay any commercial CA. We will become a root CA ourselves, and then use this CA to issue certificate for others (e.g. servers). In this task, we will make ourselves a root CA, and generate a certificate for this CA. Unlike other certificates, which are usually signed by another CA, the root CA's certificates are self-signed. Root CA's certificates are usually pre-loaded into most operating systems, web browsers, and other software that rely on PKI. Root CA's certificates are unconditionally trusted.
 
-We will use `Internal-Web` container as web server and access the website using `Internal-Client-2`. The openssl configuration file is located in: `/usr/lib/ssl/openssl.cnf`. According to configuration file we need to create directories for our certificates, see `[CA_default]` part in the configuration file. Let’s make directories on the CA, open terminal (right click on the CA node and select console), and execute the following:
+We will use `Internal-Web` container as web server and access the website using `Internal-Client-2`. The openssl configuration file is located in: `/usr/lib/ssl/openssl.cnf`. According to configuration file we need to create directories for our certificates, see `[CA_default]` part in the configuration file. Let's make directories on the CA, open terminal (right click on the CA node and select console), and execute the following:
 
 ```bash
 # move to /root directory

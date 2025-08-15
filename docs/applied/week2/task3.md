@@ -10,7 +10,7 @@ apt install apache2
 > If you get a Perl base dependency error when installing Apache2, run the following command to install the specific perl-base version (Optional).
 > `apt install perl-base=5.38.2-3.2build2`
 
-An Apache server can simultaneously host multiple websites. It needs to know the directory where a website’s files are stored. This is done via its VirtualHost file, located in the `/etc/apache2/sites-available` directory. To add an HTTP website, we add a VirtualHost entry to the file `000-default.conf` (using `nano /etc/apache2/sites-available/000-default.conf`). Add the following lines at the end of the file:
+An Apache server can simultaneously host multiple websites. It needs to know the directory where a website's files are stored. This is done via its VirtualHost file, located in the `/etc/apache2/sites-available` directory. To add an HTTP website, we add a VirtualHost entry to the file `000-default.conf` (using `nano /etc/apache2/sites-available/000-default.conf`). Add the following lines at the end of the file:
 ```bash
 nano /etc/apache2/sites-available/000-default.conf
 
@@ -73,7 +73,7 @@ nano /var/www/networksecurity/index.html
 
 #### 4. Browsing `networksecurity.com`
 
-We can use one of our clients to visit the newly created HTTPS website. Open on `Internal-Client-2` which you added in the week 1 and edit the `/etc/hosts` file. We point the URL `neworksecurity.com` to our server (If you don’t have `Internal-Client-2`, add a new node to teh Corp LAN. 
+We can use one of our clients to visit the newly created HTTPS website. Open on `Internal-Client-2` which you added in the week 1 and edit the `/etc/hosts` file. We point the URL `neworksecurity.com` to our server (If you don't have `Internal-Client-2`, add a new node to teh Corp LAN. 
 > **Do not use the exiting Internal-Client or Internal-Attacker nodes)**
 ```bash
 nano /etc/hosts
@@ -91,7 +91,7 @@ lynx https://networksecurity.com
 
 > **Answer**: Because Internal-Client-2 default OS hasn't listed the domain `networksecurity.com` in their trusted list. We must put the certificate manually. However, instead of putting server's certificate, we can put the RootCA's certificate, so every certificate signed by `RootCA` will be trusted by `Internal-Client-2`. Much more efficient than manually add every service's certificate onwards.
 
-> Had our certificate been assigned by a public CA such as GlobalSign or Sectigo, we will not have such an error message, because Public CA certificate is very likely pre-loaded into lynx’s certificate repository already. Unfortunately, the certificate of networksecurity.com is signed by our own CA (i.e., using ca.crt), and this CA is not recognized by lynx.
+> Had our certificate been assigned by a public CA such as GlobalSign or Sectigo, we will not have such an error message, because Public CA certificate is very likely pre-loaded into lynx's certificate repository already. Unfortunately, the certificate of networksecurity.com is signed by our own CA (i.e., using ca.crt), and this CA is not recognized by lynx.
 
 We can include our CA certificate in lynx. In CA server, copy the content of ca.crt:
 ```bash

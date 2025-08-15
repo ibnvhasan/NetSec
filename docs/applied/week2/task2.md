@@ -15,14 +15,14 @@ openssl rsa -in server.pem -text
 
 
 #### b) Generate a Certificate Signing Request (CSR):
-Once the company has the key file, it should generate a Certificate Signing Request (CSR), which basically includes the company’s public key. The CSR will be sent to the CA, who will generate a certificate for the key (usually after ensuring that identity information in the CSR matches with the server’s true identity). Please use `networksecurity.com` as the common name of the certificate request.
+Once the company has the key file, it should generate a Certificate Signing Request (CSR), which basically includes the company's public key. The CSR will be sent to the CA, who will generate a certificate for the key (usually after ensuring that identity information in the CSR matches with the server's true identity). Please use `networksecurity.com` as the common name of the certificate request.
 ```bash
 openssl req -new -key server.pem -out server.csr
 ```
 
 
 #### c) Generating Certificates:
-The CSR file needs to have the CA’s signature to form a certificate. In the real world, the CSR files are usually sent to a trusted CA for their signature. In this lab, we will use our own trusted CA to generate certificates. Copy the content of server.csr from `Internal-Web` to CA (refer to [Appendix 1](appendix.md#b1-option-1)). Execute the following command on CA to turn the certificate signing request `server.csr` into an X509 certificate server.crt, using the CA’s `ca.crt` and `ca.key`:
+The CSR file needs to have the CA's signature to form a certificate. In the real world, the CSR files are usually sent to a trusted CA for their signature. In this lab, we will use our own trusted CA to generate certificates. Copy the content of server.csr from `Internal-Web` to CA (refer to [Appendix 1](appendix.md#b1-option-1)). Execute the following command on CA to turn the certificate signing request `server.csr` into an X509 certificate server.crt, using the CA's `ca.crt` and `ca.key`:
 ```bash
 openssl ca -in server.csr -out server.crt -cert ca.crt -keyfile ca.key
 ```

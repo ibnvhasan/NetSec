@@ -13,7 +13,11 @@
     - [Task 2](applied/week2/task2.md)
     - [Task 3](applied/week2/task3.md)
     - [Appendix](applied/week2/appendix.md)
-- [Week 3](applied/week3.md)
+- [Week 3](applied/week3/week3.md)
+    - [Task 1](applied/week3/task1.md)
+    - [Task 2](applied/week3/task2.md)
+    - [Discussion](applied/week3/discussion.md)
+    - [Appendix](applied/week3/appendix.md)
 
 # Workshops
 - [Workshop 1](workshops/workshop1.md)

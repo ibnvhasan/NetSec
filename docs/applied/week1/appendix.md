@@ -13,7 +13,7 @@ ssh gns3@192.168.20.128
 Always SSH into the VM before accessing the Shell. You cannot copy and paste text directly into the VMWare console. Follow the instructions below to access the Shell.
 
 <p align="center">
-    <img src="../../assets/a1-fig-3.png" alt="Select OK" />
+    <img src="../../assets/a1/a1-fig-3.png" alt="Select OK" />
 </p>
 <p align="center">
     Fig3. Select OK
@@ -22,7 +22,7 @@ Always SSH into the VM before accessing the Shell. You cannot copy and paste tex
 
 
 <p align="center">
-    <img src="../../assets/a1-fig-4.png" alt="Select Shell" />
+    <img src="../../assets/a1/a1-fig-4.png" alt="Select Shell" />
 </p>
 <p align="center">
     Fig4. Select Shell
